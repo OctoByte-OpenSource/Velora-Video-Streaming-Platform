@@ -1,13 +1,25 @@
 const express = require("express");
 const app = express();
-const port = 3000;
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const cors = require("cors");
 
-// Define a route
+dotenv.config();
+
+mongoose
+	.connect(process.env.MONGO_URL)
+	.then(() => console.log("DB Connection Successfull!"))
+	.catch((err) => {
+		console.log(err);
+	});
+
 app.get("/", (req, res) => {
-  res.send("Hello rhishi! Harshit!");
+	res.send("Backend server is running!");
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+app.use(cors());
+app.use(express.json());
+
+app.listen(process.env.PORT || 5000, () => {
+	console.log("Backend server is running!");
 });
