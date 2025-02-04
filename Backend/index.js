@@ -1,17 +1,12 @@
 const express = require("express");
 const app = express();
-const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const { connectDB } = require("./utils/feature.utility");
 
 dotenv.config();
 
-mongoose
-	.connect(process.env.MONGO_URL)
-	.then(() => console.log("DB Connection Successfull!"))
-	.catch((err) => {
-		console.log(err);
-	});
+connectDB(process.env.MONGO_URL);
 
 app.get("/", (req, res) => {
 	res.send("Backend server is running!");
