@@ -3,7 +3,7 @@ const app = express();
 const dotenv = require("dotenv");
 const cors = require("cors");
 const { connectDB } = require("./utils/config");
-const uploadRoutes = require("./routes/upload.routes");
+const uploadRoutes = require("./routes/video.routes");
 
 dotenv.config();
 

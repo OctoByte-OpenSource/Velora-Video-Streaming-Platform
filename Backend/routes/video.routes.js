@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const { upload } = require("../middlewares/upload");
 const { uploadToS3 } = require("../utils/s3Upload");
-const Video = require("../models/video");
+const Video = require("../models/video.model");
 
 const router = express.Router();
 
