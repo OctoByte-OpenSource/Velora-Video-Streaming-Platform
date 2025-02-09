@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const { upload } = require("../middlewares/upload");
+const { upload } = require("../middlewares/multer.middleware");
 const { uploadToS3 } = require("../utils/s3Upload");
 const Video = require("../models/video.model");
 
@@ -14,7 +14,7 @@ router.post(
 	]),
 	async (req, res) => {
 		try {
-			const { title, description, uploader } = req.body;
+			const { title, description } = req.body;
 			console.log("Received files:", req.files);
 
 			if (!req.files || !req.files.video || !req.files.thumbnail) {
@@ -55,7 +55,6 @@ router.post(
 				video_url: videoUrl,
 				qualities,
 				thumbnail: thumbnailUrl,
-				uploader,
 			});
 
 			res.status(201).json({ message: "Upload successful", data: newVideo });
@@ -66,7 +65,7 @@ router.post(
 	}
 );
 
-router.get("/", async (req, res) => {
+router.get("/getAllVideos", async (req, res) => {
 	try {
 		const videos = await Video.find({});
 		res.status(200).json({
@@ -82,7 +81,7 @@ router.get("/", async (req, res) => {
 	}
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/getSingleVideo/:id", async (req, res) => {
 	try {
 		const { id } = req.params;
 
@@ -114,7 +113,7 @@ router.get("/:id", async (req, res) => {
 	}
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/deleteVideo/:id", async (req, res) => {
 	try {
 		const { id } = req.params;
 
