@@ -1,11 +1,18 @@
 import { useState } from "react";
-import MinimalButton from "./Utility/Button";
+import { useSelector } from "react-redux";
+import Button from "./Utility/Button";
+import { Link } from "react-router-dom";
 import { Home, Video, Heart, Settings, Search } from "lucide-react";
+import Avatar from "./Utility/Avatar";
 
 const Navbar = () => {
+	const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 	const handleClick = () => {
 		localStorage.clear();
 	};
+
+	const userAvatar = "https://mdbcdn.b-cdn.net/img/new/avatars/2.webp";
+
 	return (
 		<div className='h-20 bg-white border-b p-8 flex items-center justify-between'>
 			<div className='relative'>
@@ -16,21 +23,65 @@ const Navbar = () => {
 				<input
 					type='text'
 					placeholder='Search'
-					className='bg-gray-50 rounded-lg pl-10 pr-4 py-2 w-64 text-gray-700 
-                   border border-gray-200 focus:outline-none focus:ring-2 
-                   focus:ring-blue-500 focus:border-transparent'
+					className='bg-gray-50 rounded-lg pl-10 py-2 w-96 text-gray-700
+							border border-gray-200 focus:outline-none focus:ring-2
+							focus:ring-blue-500 focus:border-transparent'
 				/>
 			</div>
-
-			<MinimalButton onClick={handleClick}>Logout</MinimalButton>
-
-			<div className='flex items-center space-x-4'>
-				<span className='text-gray-700'>Rhishikesh</span>
-				<div className='w-8 h-8 bg-gray-200 rounded-full'></div>
-			</div>
+			{isAuthenticated ? (
+				<>
+					<div className='flex items-center space-x-5'>
+						<Button onClick={handleClick}>+ Create Watch Party</Button>
+						<span className='text-gray-700 font-medium'>Rhishikesh</span>
+						<Avatar src={userAvatar} size='40px' withDropdown={true} />
+					</div>
+				</>
+			) : (
+				<div className='flex space-x-4'>
+					<Button>
+						<Link to='/login'>Login</Link>
+					</Button>
+					<Button>
+						<Link to='/register'>Register</Link>
+					</Button>
+				</div>
+			)}
 		</div>
 	);
 };
+
+// const Navbar = () => {
+// 	const handleClick = () => {
+// 		localStorage.clear();
+// 	};
+// 	return (
+// 		<>
+// <div className='h-20 bg-white border-b p-8 flex items-center justify-between'>
+// 	<div className='relative'>
+// 		<Search
+// 			className='absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500'
+// 			size={20}
+// 		/>
+// 		<input
+// 			type='text'
+// 			placeholder='Search'
+// 			className='bg-gray-50 rounded-lg pl-10 py-2 w-96 text-gray-700
+// 				border border-gray-200 focus:outline-none focus:ring-2
+// 				focus:ring-blue-500 focus:border-transparent'
+// 		/>
+// 	</div>
+
+// <div className='flex items-center space-x-5'>
+// 	<MinimalButton onClick={handleClick}>
+// 		+ Create Watch Party
+// 	</MinimalButton>
+// 	<span className='text-gray-700 font-medium'>Rhishikesh</span>
+// 	<div className='w-10 h-10 bg-gray-200 rounded-full'></div>
+// </div>
+// 			</div>
+// 		</>
+// 	);
+// };
 
 const Sidebar = () => {
 	const [activeItem, setActiveItem] = useState("home");

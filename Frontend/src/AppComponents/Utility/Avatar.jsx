@@ -1,63 +1,67 @@
-import { User } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
-const Avatar = ({ size = "md", imageUrl, name, className = "" }) => {
-	const getInitials = () => {
-		if (!name) return "";
-		const parts = name.trim().split(" ");
-		if (parts.length === 1) {
-			return parts[0].slice(0, 2);
+const Avatar = ({
+	src,
+	alt = "User Avatar",
+	size = "40px",
+	withDropdown = false,
+}) => {
+	const [isOpen, setIsOpen] = useState(false);
+	const dropdownRef = useRef(null);
+
+	const toggleMenu = () => {
+		if (withDropdown) {
+			setIsOpen(!isOpen);
 		}
-		return parts[0][0] + parts[parts.length - 1][0];
 	};
 
-	const initials = getInitials().toUpperCase();
-
-	let containerClass = "";
-	let textClass = "";
-
-	switch (size) {
-		case "sm":
-			containerClass = "w-8 h-8";
-			textClass = "text-xs";
-			break;
-		case "lg":
-			containerClass = "w-12 h-12";
-			textClass = "text-base";
-			break;
-		case "xl":
-			containerClass = "w-16 h-16";
-			textClass = "text-lg";
-			break;
-		default:
-			containerClass = "w-10 h-10";
-			textClass = "text-sm";
-	}
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+				setIsOpen(false);
+			}
+		};
+		if (withDropdown) {
+			document.addEventListener("mousedown", handleClickOutside);
+		}
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, [withDropdown]);
 
 	return (
-		<div
-			className={`rounded-full bg-gray-100 flex items-center justify-center overflow-hidden ${containerClass} ${className}`}>
-			{imageUrl ? (
+		<div className='relative' ref={withDropdown ? dropdownRef : null}>
+			<button onClick={toggleMenu} className='focus:outline-none'>
 				<img
-					src={imageUrl}
-					alt={name || "User avatar"}
-					className='w-full h-full object-cover'
+					src={src || "/default-avatar.png"}
+					alt={alt}
+					className='rounded-full object-cover'
+					style={{ width: size, height: size }}
 				/>
-			) : initials ? (
-				<span className={`font-semibold text-gray-600 ${textClass}`}>
-					{initials}
-				</span>
-			) : (
-				<User className={`text-gray-400 ${textClass}`} />
+			</button>
+
+			{withDropdown && isOpen && (
+				<div className='absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-lg'>
+					<ul className='py-2 text-gray-700'>
+						<li className='px-4 py-2 hover:bg-gray-100 cursor-pointer'>
+							Profile
+						</li>
+						<li className='px-4 py-2 hover:bg-gray-100 cursor-pointer'>
+							Logout
+						</li>
+					</ul>
+				</div>
 			)}
 		</div>
 	);
 };
+
 Avatar.propTypes = {
-	size: PropTypes.oneOf(["sm", "md", "lg", "xl"]),
-	imageUrl: PropTypes.string,
-	name: PropTypes.string,
-	className: PropTypes.string,
+	src: PropTypes.string,
+	alt: PropTypes.string,
+	size: PropTypes.string,
+	withDropdown: PropTypes.bool,
 };
 
 export default Avatar;
