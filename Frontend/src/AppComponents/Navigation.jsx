@@ -6,7 +6,7 @@ import { Home, Video, Heart, Settings, Search } from "lucide-react";
 import Avatar from "./Utility/Avatar";
 
 const Navbar = () => {
-	const isAuthenticated = true;
+	const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 	const handleClick = () => {
 		localStorage.clear();
 	};
