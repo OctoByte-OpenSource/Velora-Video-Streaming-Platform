@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // import { useSelector } from "react-redux"
 
 
@@ -13,5 +14,15 @@ const ProfileImage = () => {
         </div>
         )
 }
+=======
+// eslint-disable-next-line react/prop-types
+const ProfileImage = () => {
+	return (
+		<div className='rounded-full absolute right-2'>
+			<img alt='profileImage' />
+		</div>
+	);
+};
+>>>>>>> 51a10fb239de5a78d00422435e2ede53c4f7bec5
 
-export default ProfileImage
+export default ProfileImage;
