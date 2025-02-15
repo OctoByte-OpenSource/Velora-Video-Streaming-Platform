@@ -8,27 +8,28 @@ import ProfileImage from "./ProfileImage"
 const NavBar = () => {
 
   // const profileImage = useSelector((state) => state.auth.user.profileImage);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const isAuthenticated = true;
 
   const handleClick = () => {
     localStorage.clear();
   }
 
   return (
-    <div className='w-full flex justify-evenly bg-black pt-2 pb-1'>
-      <img className="w-[100px]" src="https://betanews.com/wp-content/uploads/2017/08/new-youtube-logo.jpg"></img>
-      <Input className="w-[40%] mt-3 text-white " placeholder = "Search...."></Input>
+    <div className='w-full flex justify-evenly bg-transparent pt-2 pb-1'>
+      <h1 className="text-gray-900 text-balance mt-1 dark:text-white font-bold text-5xl md:text-6xl xl:text-4xl"><span className="text-primary dark:text-white">Velora</span></h1>
+      <Input className="w-[40%] mt-3 border-collapse shadow-lg bg-white text-black " placeholder = "Search...."></Input>
       <div className='flex gap-4 mt-3'>
         {
             isAuthenticated ? 
               <>
                 <ProfileImage></ProfileImage>
-                <Button onClick={handleClick} className="">Logout</Button>
+                
+                <button onClick={handleClick} className="text-white font-bold bg-black hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 rounded-full text-sm px-4 py-1 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Logout</button>
               </>
              : 
               <>
-                <Button className=""><Link to="/login">Login</Link></Button>
-                <Button className=""><Link to="/register">Register</Link></Button>
+                <button type="button" className="text-white font-bold bg-black hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 rounded-full text-sm px-4 py-1 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><Link to="/login">Login</Link></button>
+                <button type="button" className="text-white font-bold bg-black hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 rounded-full text-sm px-4 py-1 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><Link to="/register">Register</Link></button>
               </>
         }
       </div>

@@ -1,8 +1,13 @@
 import { useState } from "react"
 import { loginUser } from "@/api/auth"
-import { NavLink } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const Login = () => {
+
+  const navigate = useNavigate();
+  const isAuthenticated = true;
 
   const [loginUserData, setLoginUserData] = useState({
     email: "",
@@ -19,13 +24,18 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = loginUser(loginUserData);
-    console.log(response);
+    // const response = loginUser(loginUserData);
+    // console.log(response);
+    console.log(isAuthenticated)
+    isAuthenticated ? navigate('/dashboard') : toast.error("Enter Valid Credentials");
+
+    // response.data.success == true ? navigate('/dashboard') : navigate('/login')
   }
 
   return (
 
     <section className="bg-gradient-to-r from-cyan-400 to-indigo-600">
+      
   <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
 
       <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">

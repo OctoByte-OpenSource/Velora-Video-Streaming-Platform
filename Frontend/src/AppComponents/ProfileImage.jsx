@@ -9,7 +9,7 @@ const ProfileImage = () => {
     
         return (
         <div>
-            <img className="mt-1 w-[50px] h-[50px] rounded-full" src={tempProfleImage} alt="profileImage" />
+            <img className="mt-0 w-[50px] h-[50px] rounded-full" src={tempProfleImage} alt="profileImage" />
         </div>
         )
 }
