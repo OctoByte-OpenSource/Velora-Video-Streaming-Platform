@@ -11,8 +11,8 @@ const Card = ({ thumbnail, description, channel_name}) => {
             <p className="mt-2 text-center font-semibold">{videoThumbnail.channel_name}</p> */}
             </div>
             
-            <p className="mt-2 font-semibold text-white">{description}</p>
-            <p className="mt-1 font-semibold text-white">{channel_name}</p>
+            <p className="mt-2 text-black font-bold">{description}</p>
+            <p className="mt-1 font-semibold text-black">{channel_name}</p>
         </div>
         );
 };

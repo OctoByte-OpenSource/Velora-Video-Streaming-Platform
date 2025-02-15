@@ -3,6 +3,8 @@ import Login from './pages/Login'
 import { Route, Routes } from 'react-router-dom'
 import Register from './pages/Register'
 import DashBoard from './pages/DashBoard'
+import WatchPartyPage from './pages/WatchPartyPage'
+import SingleVideoPage from './pages/SingleVideoPage'
 
 function App() {
 
@@ -12,6 +14,8 @@ function App() {
         <Route path='/' element={<DashBoard/>}></Route>
         <Route path = '/login' element={<Login/>}></Route>
         <Route path= '/register' element={<Register/>}></Route>
+        <Route path='/watchPartyPage' element={<WatchPartyPage/>}></Route>
+        <Route path='/singleVideoPage' element={<SingleVideoPage/>}></Route>
       </Routes>
 
     </div>

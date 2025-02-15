@@ -7,7 +7,7 @@ const DashBoard = () => {
   return (
     <div >
       <NavBar></NavBar>
-      <div className="grid grid-cols-4 gap-10 ml-2 mr-6 pl-3 bg-black">
+      <div className="grid grid-cols-4 gap-10 ml-2 mr-6 pl-3 mt-6 bg-white">
       {
         data?.map((video) => (
               // console.log("Hello", video.thumbnail)
