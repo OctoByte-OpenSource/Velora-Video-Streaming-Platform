@@ -1,6 +1,15 @@
 const express = require("express");
+const auth = require("../middlewares/auth.middleware");
 const { upload } = require("../middlewares/multer.middleware");
-const { upload, getAllVideos } = require("../controllers/video.controller");
+const {
+	uploadDetails,
+	getAllVideos,
+	getSingleVideo,
+	deleteVideo,
+	searchVideos,
+	countViews,
+	videoLikes,
+} = require("../controllers/video.controller");
 
 const router = express.Router();
 
@@ -10,7 +19,7 @@ router.post(
 		{ name: "video", maxCount: 1 },
 		{ name: "thumbnail", maxCount: 1 },
 	]),
-	upload
+	uploadDetails
 );
 
 router.get("/getAllVideos", getAllVideos);
@@ -18,5 +27,11 @@ router.get("/getAllVideos", getAllVideos);
 router.get("/getSingleVideo/:id", getSingleVideo);
 
 router.delete("/deleteVideo/:id", deleteVideo);
+
+router.get("/search", searchVideos);
+
+router.patch("/:id/views", auth, countViews);
+
+router.patch("/:id/like", auth, videoLikes);
 
 module.exports = router;

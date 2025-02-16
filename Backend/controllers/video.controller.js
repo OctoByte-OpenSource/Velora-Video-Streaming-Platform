@@ -3,7 +3,8 @@ const Video = require("../models/video.model");
 const mongoose = require("mongoose");
 const { uploadToS3 } = require("../utils/s3Upload");
 
-const upload = TryCatch(async (req, res, next) => {
+// Upload Video
+const uploadDetails = TryCatch(async (req, res, next) => {
 	const { title, description } = req.body;
 	const uploader = req.userId;
 	console.log("Received files:", req.files);
@@ -41,12 +42,15 @@ const upload = TryCatch(async (req, res, next) => {
 		video_url: videoUrl,
 		qualities,
 		uploader,
+		views: [],
+		likes: [],
 		thumbnail: thumbnailUrl,
 	});
 
 	res.status(201).json({ message: "Upload successful", data: newVideo });
 });
 
+//  Get all Videos
 const getAllVideos = TryCatch(async (req, res) => {
 	const videos = await Video.find({});
 	res.status(200).json({
@@ -56,23 +60,18 @@ const getAllVideos = TryCatch(async (req, res) => {
 	});
 });
 
+// Get Single Video
 const getSingleVideo = TryCatch(async (req, res) => {
 	const { id } = req.params;
 
 	if (!mongoose.Types.ObjectId.isValid(id)) {
-		return res.status(400).json({
-			success: false,
-			message: "Invalid video ID",
-		});
+		return next(new ErrorHandler("Invalid video ID", 400));
 	}
 
 	const video = await Video.findById(id);
 
 	if (!video) {
-		return res.status(404).json({
-			success: false,
-			message: "Video not found",
-		});
+		return next(new ErrorHandler("Video not found", 400));
 	}
 
 	res.status(200).json({
@@ -81,23 +80,124 @@ const getSingleVideo = TryCatch(async (req, res) => {
 	});
 });
 
-const deleteVideo = TryCatch(async (req, res) => {
+// Count Views
+const countViews = TryCatch(async (req, res) => {
 	const { id } = req.params;
+	const userId = req.userId;
 
 	if (!mongoose.Types.ObjectId.isValid(id)) {
-		return res.status(400).json({
-			success: false,
-			message: "Invalid video ID",
+		return next(new ErrorHandler("Invalid video ID", 400));
+	}
+
+	const video = await Video.findById(id);
+
+	if (!video) {
+		return res.status(404).json({ success: false, message: "Video not found" });
+	}
+
+	// Always check if the views array exists before using it
+	if (!video.views) {
+		video.views = [];
+	}
+
+	const viewed = video.views.find((view) => view.toString() === userId);
+
+	if (viewed) {
+		return res.status(200).json({
+			success: true,
+			message: "View already counted",
+			totalViews: video.views.length,
 		});
+	}
+
+	video.views.push(userId);
+	await video.save();
+
+	res.status(200).json({
+		success: true,
+		message: "View counted",
+		totalViews: video.views.length,
+	});
+});
+
+// Search Video
+const searchVideos = TryCatch(async (req, res) => {
+	const { title } = req.query;
+
+	if (!title) {
+		return res
+			.status(400)
+			.json({ success: false, message: "Title is required" });
+	}
+
+	const regex = new RegExp(title, "i");
+	const videos = await Video.find(
+		// $or: [{ title: regex }, { description: regex }],
+		{ title: regex }
+	);
+
+	res.status(200).json({ success: true, data: videos });
+});
+
+// Like Video
+const videoLikes = TryCatch(async (req, res) => {
+	const { id } = req.params;
+	const userId = req.userId;
+
+	if (!mongoose.Types.ObjectId.isValid(id)) {
+		return res
+			.status(400)
+			.json({ success: false, message: "Invalid video ID" });
 	}
 
 	const video = await Video.findById(id);
 	if (!video) {
-		return res.status(404).json({
-			success: false,
-			message: "Video not found",
+		return res.status(404).json({ success: false, message: "Video not found" });
+	}
+
+	// likes array is initialized
+	if (!video.likes) {
+		video.likes = [];
+	}
+
+	const likedIndex = video.likes.findIndex(
+		(like) => like.toString() === userId
+	);
+
+	if (likedIndex !== -1) {
+		// unlike video
+		video.likes.splice(likedIndex, 1);
+		await video.save();
+		return res.status(200).json({
+			success: true,
+			message: "Like removed",
+			likesCount: video.likes.length,
 		});
 	}
+
+	// like video
+	video.likes.push(userId);
+	await video.save();
+	res.status(200).json({
+		success: true,
+		message: "Video liked",
+		likesCount: video.likes.length,
+	});
+});
+
+// Delete Video
+const deleteVideo = TryCatch(async (req, res) => {
+	const { id } = req.params;
+
+	if (!mongoose.Types.ObjectId.isValid(id)) {
+		return next(new ErrorHandler("Invalid video ID", 400));
+	}
+
+	const video = await Video.findById(id);
+	if (!video) {
+		return next(new ErrorHandler("Video not found", 400));
+	}
+
 	await Video.findByIdAndDelete(id);
 
 	res.status(200).json({
@@ -106,4 +206,12 @@ const deleteVideo = TryCatch(async (req, res) => {
 	});
 });
 
-module.exports = { upload, getAllVideos, getSingleVideo, deleteVideo };
+module.exports = {
+	uploadDetails,
+	getAllVideos,
+	searchVideos,
+	getSingleVideo,
+	deleteVideo,
+	countViews,
+	videoLikes,
+};
