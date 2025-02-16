@@ -29,10 +29,12 @@ const videoSchema = new mongoose.Schema(
 				ref: "User",
 			},
 		],
-		views: {
-			type: Number,
-			default: 0,
-		},
+		views: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "User",
+			},
+		],
 		thumbnail: {
 			type: String,
 			required: [true, "Thumbnail is required"],
