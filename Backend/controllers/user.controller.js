@@ -8,33 +8,36 @@ const { default: mongoose } = require("mongoose");
 const { uploadToS3 } = require("../utils/s3Upload");
 
 const newUser = TryCatch(async (req, res, next) => {
-	const { username, password, bio } = req.body;
+	
+	const { username, bio, email, password } = req.body;
+	
 
 	const file = req.file;
 
 	if (!file) return next(new ErrorHandler("Profile picture required"));
 
-	//upload to S3;
+	// upload to S3;
 
 	const profileImageUrl = await uploadToS3(file, "profileImages");
 
 	// await s3Client.send(command);
 
-	const profileImage = {
-		url: profileImageUrl,
-		public_id: "dummy",
-	};
+	const profileImage = profileImageUrl;
+	
 	console.log(profileImage);
 
 	const newUser = await userModel.create({
 		username,
-		password,
+		email,
 		bio,
+		password,
 		subcribers: [],
 		subscribedChannel: [],
 		videos: [],
-		profileImage,
+		profileImage
 	});
+
+	console.log("newUser", newUser)
 
 	const token = jwt.sign({ _id: newUser._id }, "JWT SECRET");
 

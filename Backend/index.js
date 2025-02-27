@@ -30,6 +30,6 @@ app.use("/api/v1/videos", uploadRoutes);
 app.use("/api/v1/watchparty", watchParty);
 app.use(errorMiddleware);
 
-server.listen(process.env.PORT || 5000, () => {
-  console.log("Backend server is running!");
+server.listen(process.env.PORT || 4000, () => {
+  console.log(`Backend server is running at ${process.env.PORT}`);
 });

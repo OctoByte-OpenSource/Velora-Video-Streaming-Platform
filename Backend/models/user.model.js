@@ -8,24 +8,26 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+
+    email: {
+      type: String,
+      required: true,
+    },
+    
+    bio: {
+      type: String,
+    },
+
     password: {
       type: String,
       required: true,
       select: false,
     },
-    bio: {
-      type: String,
-    },
 
     profileImage: {
-      url: {
         required: true,
         type: String,
-      },
-      public_id: {
-        required: true,
-        type: String,
-      },
+      
     },
     subcribers: [
       {

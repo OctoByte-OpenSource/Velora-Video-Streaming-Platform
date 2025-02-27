@@ -5,7 +5,8 @@ import { Navigate } from 'react-router-dom'
 
 const PrivateRoute = ({children}) => {
     console.log("Children", children)
-    const isAuthenticated = true
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+    console.log("isAuth", isAuthenticated)
   return (
     <div>
       {
