@@ -9,6 +9,7 @@ const {
 	searchVideos,
 	countViews,
 	videoLikes,
+	getSingleVideoEdit,
 } = require("../controllers/video.controller");
 
 const router = express.Router();
