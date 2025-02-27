@@ -1,5 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
+import { logout } from "@/redux/slices/authSlice"; 
+
+
 
 const Avatar = ({
 	src,
@@ -9,6 +13,7 @@ const Avatar = ({
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const dropdownRef = useRef(null);
+	const dispatch = useDispatch();
 
 	const toggleMenu = () => {
 		if (withDropdown) {
@@ -47,7 +52,7 @@ const Avatar = ({
 						<li className='px-4 py-2 hover:bg-gray-100 cursor-pointer'>
 							Profile
 						</li>
-						<li className='px-4 py-2 hover:bg-gray-100 cursor-pointer'>
+						<li onClick={() => dispatch(logout())} className='px-4 py-2 hover:bg-gray-100 cursor-pointer'>
 							Logout
 						</li>
 					</ul>

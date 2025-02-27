@@ -28,6 +28,12 @@ function App() {
           </PrivateRoute>
           }></Route>
 
+        <Route path='/singleVideoPage' element={
+          <PrivateRoute>
+              <SingleVideoPage/>
+          </PrivateRoute>
+          }></Route>
+
       </Routes>
 
     </div>
