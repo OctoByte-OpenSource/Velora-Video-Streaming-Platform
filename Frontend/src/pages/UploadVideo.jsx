@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { AppLayout } from "@/AppComponents/Layout/appLayout";
+import { AppLayout } from "@/AppComponents/Layout/AppLayout";
 import {
 	useUploadVideoMutation,
 	useLazyGetSingleVideoQuery,

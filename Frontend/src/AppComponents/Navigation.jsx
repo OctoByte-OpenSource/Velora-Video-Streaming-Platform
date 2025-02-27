@@ -7,9 +7,9 @@ import Avatar from "./Utility/Avatar";
 
 const Navbar = () => {
 	const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-	const {username} = useSelector((state) => state.auth.user)
-	const {url} = useSelector((state) => state.auth.user.profileImage)
-	console.log("url",url)
+	const { username } = useSelector((state) => state.auth.user);
+	const url = useSelector((state) => state.auth.user.profileImage);
+	console.log("url", url);
 	const handleClick = () => {
 		localStorage.clear();
 	};

@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import Card from "@/AppComponents/Card";
 import { useGetAllVideosQuery } from "@/redux/api/videoApiSlice";
+import { AppLayout } from "@/AppComponents/Layout/AppLayout";
 
 const DashBoard = () => {
 	const [videos, setVideos] = useState([]);
 	const { data, error, isLoading } = useGetAllVideosQuery({
 		page: 1,
-		limit: 20,
+		limit: 30,
 	});
 
 	useEffect(() => {
@@ -32,4 +33,4 @@ const DashBoard = () => {
 	);
 };
 
-export default DashBoard;
+export default AppLayout()(DashBoard);

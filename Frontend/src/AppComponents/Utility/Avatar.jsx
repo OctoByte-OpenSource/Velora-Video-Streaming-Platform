@@ -1,9 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
-import { logout } from "@/redux/slices/authSlice"; 
-
-
+import { logout } from "@/redux/slices/authSlice";
 
 const Avatar = ({
 	src,
@@ -39,7 +37,10 @@ const Avatar = ({
 		<div className='relative' ref={withDropdown ? dropdownRef : null}>
 			<button onClick={toggleMenu} className='focus:outline-none'>
 				<img
-					src={src || "/default-avatar.png"}
+					src={
+						src ||
+						"https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D"
+					}
 					alt={alt}
 					className='rounded-full object-cover'
 					style={{ width: size, height: size }}
@@ -52,7 +53,9 @@ const Avatar = ({
 						<li className='px-4 py-2 hover:bg-gray-100 cursor-pointer'>
 							Profile
 						</li>
-						<li onClick={() => dispatch(logout())} className='px-4 py-2 hover:bg-gray-100 cursor-pointer'>
+						<li
+							onClick={() => dispatch(logout())}
+							className='px-4 py-2 hover:bg-gray-100 cursor-pointer'>
 							Logout
 						</li>
 					</ul>

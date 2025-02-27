@@ -4,7 +4,7 @@ import {
 	useGetAllVideosQuery,
 	useDeleteVideoMutation,
 } from "@/redux/api/videoApiSlice";
-import { AppLayout } from "@/AppComponents/Layout/appLayout";
+import { AppLayout } from "@/AppComponents/Layout/AppLayout";
 import { useNavigate } from "react-router-dom";
 import { Pencil, Trash } from "lucide-react";
 
