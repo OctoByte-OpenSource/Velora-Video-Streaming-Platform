@@ -7,11 +7,12 @@ import Avatar from "./Utility/Avatar";
 
 const Navbar = () => {
 	const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+	const {username} = useSelector((state) => state.auth.user)
+	const {url} = useSelector((state) => state.auth.user.profileImage)
+	console.log("url",url)
 	const handleClick = () => {
 		localStorage.clear();
 	};
-
-	const userAvatar = "https://mdbcdn.b-cdn.net/img/new/avatars/2.webp";
 
 	return (
 		<div className='h-20 bg-white border-b p-8 flex items-center justify-between'>
@@ -32,8 +33,8 @@ const Navbar = () => {
 				<>
 					<div className='flex items-center space-x-5'>
 						<Button onClick={handleClick}>+ Create Watch Party</Button>
-						<span className='text-gray-700 font-medium'>Rhishikesh</span>
-						<Avatar src={userAvatar} size='40px' withDropdown={true} />
+						<span className='text-gray-700 font-medium'>{username}</span>
+						<Avatar src={url} size='40px' withDropdown={true} />
 					</div>
 				</>
 			) : (

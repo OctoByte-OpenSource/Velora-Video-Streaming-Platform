@@ -7,27 +7,32 @@ const authSlice = createSlice({
 	initialState: {
 		user: localStorage.getItem("user") || null,
 		token: localStorage.getItem("token") || null,
-		isAuthenticated: true,
-		error: null,
+		isAuthenticated: false,
 	},
 	reducers: {
-		setSignUpData(state, action) {
-			state.user = action.payload.user;
-		},
 		setLoginData(state, action) {
-			state.token = action.payload.token;
-			localStorage.setItem("user", action.payload.user);
-			localStorage.setItem("token", action.payload.token);
-			action.payload.success
-				? (state.isAuthenticated = true)
-				: (state.isAuthenticated = false);
+			if (action.payload.success) {
+				console.log("Bhai succcess hogaya");
+				localStorage.setItem("user", action.payload.user);
+				localStorage.setItem("token", action.payload.token);
+				console.log("User localstorgae", localStorage.getItem("user"));
+			}
+			return {
+				...state,
+				isAuthenticated: action.payload.success,
+				user: action.payload.success ? action.payload.user : state.user,
+				token: action.payload.success ? action.payload.token : state.token,
+			};
 		},
-		authFailed(state, action) {
-			state.error = action.payload;
+		logout(state) {
+			localStorage.clear();
+			state.user = null;
+			state.token = null;
+			state.isAuthenticated = false;
 		},
 	},
 });
 
-export const { setSignUpData, setLoginData, authFailed } = authSlice.actions;
+export const { setLoginData, logout } = authSlice.actions;
 
 export default authSlice.reducer;
