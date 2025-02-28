@@ -4,7 +4,17 @@
 	box-sizing: border-box;
 }
 
-body{
-  overflow-x: hidden;
-  background-color: white;
+body {
+	overflow-x: hidden;
+	background-color: white;
+}
+
+/* Hide scrollbar but keep scrolling functionality */
+::-webkit-scrollbar {
+	display: none;
+}
+
+body {
+	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none; /* Internet Explorer/Edge */
 }

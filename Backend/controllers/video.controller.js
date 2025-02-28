@@ -5,9 +5,62 @@ const { uploadToS3 } = require("../utils/s3Upload");
 
 // Upload Video
 const uploadDetails = TryCatch(async (req, res, next) => {
-	const { title, description } = req.body;
+	const { title, description, videoId } = req.body;
 	const uploader = req.userId;
 	console.log("Received files:", req.files);
+
+	if (videoId) {
+		const existingVideo = await Video.findById(videoId);
+		if (!existingVideo) {
+			return next(new ErrorHandler("Video not found", 404));
+		}
+
+		let videoUrl = existingVideo.video_url;
+		let thumbnailUrl = existingVideo.thumbnail;
+		let qualities = existingVideo.qualities;
+
+		if (req.files?.video) {
+			videoUrl = await uploadToS3(req.files.video[0], "videos");
+			qualities = [
+				{
+					resolution: "360p",
+					url: videoUrl.replace("videos/", "videos/360p_"),
+				},
+				{
+					resolution: "480p",
+					url: videoUrl.replace("videos/", "videos/480p_"),
+				},
+				{
+					resolution: "720p",
+					url: videoUrl.replace("videos/", "videos/720p_"),
+				},
+				{
+					resolution: "1080p",
+					url: videoUrl.replace("videos/", "videos/1080p_"),
+				},
+			];
+		}
+
+		if (req.files?.thumbnail) {
+			thumbnailUrl = await uploadToS3(req.files.thumbnail[0], "thumbnails");
+		}
+
+		const updatedVideo = await Video.findByIdAndUpdate(
+			videoId,
+			{
+				title,
+				description,
+				video_url: videoUrl,
+				qualities,
+				thumbnail: thumbnailUrl,
+			},
+			{ new: true }
+		);
+
+		return res
+			.status(200)
+			.json({ message: "Video updated successfully", data: updatedVideo });
+	}
 
 	if (!req.files || !req.files.video || !req.files.thumbnail) {
 		return next(new ErrorHandler("Kindly provide files", 400));
@@ -52,10 +105,18 @@ const uploadDetails = TryCatch(async (req, res, next) => {
 
 //  Get all Videos
 const getAllVideos = TryCatch(async (req, res) => {
-	const videos = await Video.find({});
+	const page = parseInt(req.query.page) || 1;
+	const limit = parseInt(req.query.limit) || 2;
+	const skip = (page - 1) * limit;
+
+	const videos = await Video.find({}).skip(skip).limit(limit);
+	const totalVideos = await Video.countDocuments();
+
 	res.status(200).json({
 		success: true,
 		count: videos.length,
+		page,
+		totalPages: Math.ceil(totalVideos / limit),
 		data: videos,
 	});
 });

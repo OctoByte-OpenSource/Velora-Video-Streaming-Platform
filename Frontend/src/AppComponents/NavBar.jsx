@@ -5,7 +5,7 @@ import ProfileImage from "./ProfileImage";
 
 const NavBar = () => {
 	// const profileImage = useSelector((state) => state.auth.user.profileImage);
-	const isAuthenticated = false;
+	const isAuthenticated = true;
 
 	const handleClick = () => {
 		localStorage.clear();
@@ -44,9 +44,6 @@ const NavBar = () => {
 			</div>
 		</div>
 	);
-
-	
-	
 };
 
 export default NavBar;

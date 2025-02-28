@@ -8,9 +8,7 @@ const { default: mongoose } = require("mongoose");
 const { uploadToS3 } = require("../utils/s3Upload");
 
 const newUser = TryCatch(async (req, res, next) => {
-	
 	const { username, bio, email, password } = req.body;
-	
 
 	const file = req.file;
 
@@ -23,7 +21,7 @@ const newUser = TryCatch(async (req, res, next) => {
 	// await s3Client.send(command);
 
 	const profileImage = profileImageUrl;
-	
+
 	console.log(profileImage);
 
 	const newUser = await userModel.create({
@@ -34,10 +32,10 @@ const newUser = TryCatch(async (req, res, next) => {
 		subcribers: [],
 		subscribedChannel: [],
 		videos: [],
-		profileImage
+		profileImage,
 	});
 
-	console.log("newUser", newUser)
+	console.log("newUser", newUser);
 
 	const token = jwt.sign({ _id: newUser._id }, "JWT SECRET");
 
@@ -61,6 +59,8 @@ const login = TryCatch(async (req, res, next) => {
 		return next(new ErrorHandler("Credentials required", 403));
 
 	const user = await userModel.findOne({ username }).select("+password");
+
+	console.log(user, password);
 
 	if (!user)
 		return next(new ErrorHandler("Username or password incorrect", 403));
