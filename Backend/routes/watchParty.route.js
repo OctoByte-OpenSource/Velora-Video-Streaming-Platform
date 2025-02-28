@@ -7,18 +7,18 @@ const watchParty = express.Router();
 watchParty.post(
   "/create",
   TryCatch(async (req, res, next) => {
-    const { roomName, videoUrl } = req.body;
-    const videoId = "testId";
+    const { roomName, videoId } = req.body;
+    // const videoId = "testId";
     console.log(req.body);
 
-    if (!roomName || !videoUrl)
+    if (!roomName || !videoId)
       return next(new ErrorHandler("data is insuficeint"));
 
     const checkRoom = await roomModel.findOne({ roomName });
     if (checkRoom)
       return next(new ErrorHandler("Room already exist with that name "));
 
-    const room = await roomModel.create({ roomName, videoUrl });
+    const room = await roomModel.create({ roomName, videoId });
 
     return res
       .status(200)

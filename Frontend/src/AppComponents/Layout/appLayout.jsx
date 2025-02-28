@@ -1,5 +1,5 @@
 import DashBoard from "@/pages/DashBoard";
-import { Sidebar, Navbar } from "../../AppComponents/Navigation";
+import { Sidebar, Navbar } from "../Navigation";
 
 const appLayout = () => {
   return (
@@ -21,11 +21,12 @@ const AppLayout = () => (WrapperComponent) => {
   // eslint-disable-next-line react/display-name
   return (props) => {
     return (
-      <div className="flex h-screen overflow-y-scroll bg-white">
+      <div className="flex max-h-screen  bg-white">
         <Sidebar />
         <div className="flex-1 flex flex-col">
-          <Navbar />
-          <div className="flex-1 h-screen p-1">
+          {/* <Navbar /> */}
+
+          <div className="flex-1 p-1 overflow-y-scroll">
             <WrapperComponent {...props} />
           </div>
         </div>

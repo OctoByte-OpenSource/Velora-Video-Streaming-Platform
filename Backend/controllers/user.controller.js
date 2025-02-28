@@ -24,7 +24,7 @@ const newUser = TryCatch(async (req, res, next) => {
     url: profileImageUrl,
     public_id: "dummy",
   };
-  console.log(profileUpload);
+  // console.log(profileUpload);
 
   const newUser = await userModel.create({
     username,
@@ -38,10 +38,11 @@ const newUser = TryCatch(async (req, res, next) => {
 
   const token = jwt.sign({ _id: newUser._id }, "JWT SECRET");
 
-  return res.status(201).cookie("velora", token, cookieOptions).json({
+  return res.status(201).json({
     success: true,
     message: "User created successfully",
     user: newUser,
+    token,
   });
 });
 
@@ -72,12 +73,29 @@ const login = TryCatch(async (req, res, next) => {
 
 const getUserInfo = TryCatch(async (req, res, next) => {
   const userId = req.params.id;
-  const user = await userModel.findById(userId);
+  const user = await userModel.findById(userId).populate("videos");
   if (!user) return next(new ErrorHandler("No user found with that detail"));
 
-  return res
-    .status(200)
-    .json({ success: true, message: "User data fetched successfully", user });
+  const userVideos = user.videos;
+  let totalLikes = 0;
+  let totalViews = 0;
+
+  userVideos.forEach((video, i) => {
+    const video_like = video.likes.length;
+    const video_views = video.views.length;
+    totalLikes += video_like;
+    totalViews += video_views;
+  });
+  user.totalLikes = totalLikes;
+  user.totalViews = totalViews;
+
+  return res.status(200).json({
+    success: true,
+    message: "User data fetched successfully",
+    user,
+    totalLikes,
+    totalViews,
+  });
 });
 
 const getAllUsers = TryCatch(async (req, res, next) => {

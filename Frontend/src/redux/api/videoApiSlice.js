@@ -14,6 +14,11 @@ const videoSlice = api.injectEndpoints({
         url: "videos/getAllVideos",
       }),
     }),
+    getVideo: builder.query({
+      query: (id) => ({
+        url: `videos/getSingleVideo/${id}`,
+      }),
+    }),
     deleteVideo: builder.mutation({
       query: (id) => ({
         url: `videos/deleteVideo/${id}`,
@@ -49,4 +54,5 @@ export const {
   useDeleteVideoMutation,
   useLikeVideoMutation,
   useViewCountMutation,
+  useGetVideoQuery,
 } = videoSlice;
