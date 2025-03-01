@@ -9,6 +9,7 @@ const {
   MESSAGE_ROOM,
   ROOM_JOIN_ALERT,
   SEEK_TO,
+  ROOM_LEFT_ALERT,
 } = require("./constants/socketEvent");
 
 const socketAuth = require("./middlewares/socketAuth.middleware");
@@ -33,15 +34,14 @@ const SocketConnection = (server) => {
   io.on("connection", (socket) => {
     console.log("a user connected", socket.id);
     const user = socket.user;
+    const userIdString = user._id.toString();
     //for joining room
     socket.on(JOIN_ROOM, async ({ roomName }) => {
-      console.log("Join room", roomName);
-      if (roomMembers.get[roomName] !== -1) {
-        const userSet = new Set();
-        userSet.add(user._id);
-        roomMembers.set(roomName, userSet);
-      } else {
-        roomMembers[roomName].add(user._id);
+      if (!roomMembers.has(roomName)) {
+        roomMembers.set(roomName, new Set());
+      }
+      if (!roomMembers.get(roomName).has(userIdString)) {
+        roomMembers.get(roomName).add(userIdString);
       }
 
       console.log("room members", roomMembers);
@@ -88,7 +88,6 @@ const SocketConnection = (server) => {
         },
         createdAt: new Date().toString(),
       };
-      console.log(realTimeMessage);
 
       // -> can use mangodb to store message for 24hrs
       io.to(roomName).emit(MESSAGE_ROOM, {
@@ -119,10 +118,17 @@ const SocketConnection = (server) => {
       let userName = null;
 
       for (let [room, membersInRoom] of roomMembers) {
-        if (membersInRoom.has(user._id)) {
+        console.log("disconnected room data", room, roomMembers);
+        if (membersInRoom.has(userIdString)) {
+          console.log("disconnected room data", room, roomMembers);
           userRoom = room;
           userName = user.username;
-          membersInRoom.delete(user._id);
+          membersInRoom.delete(userIdString);
+          console.log(
+            "disconnected room data after deleted",
+            room,
+            roomMembers
+          );
         }
         if (membersInRoom.size === 0) {
           delete roomMembers[room];
@@ -137,14 +143,15 @@ const SocketConnection = (server) => {
         userModel.findById(memberId, "username profileImage")
       );
       const members = await Promise.all(membersPromise);
+      const room = await roomModel.findOne({ roomName: userRoom });
 
       if (userName && userRoom) {
         io.to(userRoom).emit(ROOM_DATA, {
-          userRoom,
+          room,
           peopleCount,
           members,
         });
-        io.to(userName).emit("ROOM_LEFT_ALERT", { name: userName });
+        io.to(userRoom).emit(ROOM_LEFT_ALERT, { name: userName });
       }
 
       console.log(`User ${socket.id} disconneted`);

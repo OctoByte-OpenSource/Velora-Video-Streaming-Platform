@@ -3,24 +3,18 @@ import Avatar from "../Utility/Avatar";
 
 const WatchPartyVideoDetails = ({ members, peopleCount }) => {
   return (
-    <div className=" p-1">
-      <div>
-        <p className=" font-semibold">This should be title</p>
-      </div>
-      <div className=" flex justify-between">
+    <div className=" flex flex-col gap-2 py-1 px-10">
+      <div className=" flex justify-between  text-sm font-extrabold">
         {" "}
         <p>Members</p>
         <p>Live: {peopleCount}</p>
       </div>
-      <div className="flex">
+      <div className="flex gap-2 p-1">
         {members.map((member, i) => (
-          <Avatar
-            key={i}
-            size="55px"
-            src="https://png.pngtree.com/png-vector/20230831/ourlarge/pngtree-man-avatar-image-for-profile-png-image_9197911.png"
-          >
-            {member.username}
-          </Avatar>
+          <div key={i} className=" p-1">
+            <Avatar size="50px" src={member.profileImage} alt="ABDS"></Avatar>
+            <p className=" text-sm">{member.username}</p>
+          </div>
         ))}
       </div>
     </div>

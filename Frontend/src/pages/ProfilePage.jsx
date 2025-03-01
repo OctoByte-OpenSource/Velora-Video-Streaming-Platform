@@ -21,7 +21,7 @@ const ProfilePage = () => {
       {isLoading ? (
         <p>loadConfigFromFile.....</p>
       ) : (
-        <div className=" w-full h-full grid py-5 px-10 items-center justify-center">
+        <div className=" w-[90vw] h-full grid py-5 px-10 items-center justify-center">
           <div className="  h-full min-w-[75vw] flex flex-col  gap-3 ">
             <div className=" bg-blue-800 px-5  rounded-xl text-white ">
               <div className=" flex p-10  items-center sm:gap-5  max-sm:flex-col ">

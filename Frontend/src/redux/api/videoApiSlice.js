@@ -5,18 +5,19 @@ const videoSlice = api.injectEndpoints({
     uploadVideo: builder.mutation({
       query: (data) => ({
         url: "videos/upload",
-        body: data,
         method: "POST",
+        body: data,
+        formData: true,
+      }),
+    }),
+    getSingleVideo: builder.query({
+      query: (id) => ({
+        url: `videos/getSingleVideo/${id}`,
       }),
     }),
     getAllVideos: builder.query({
-      query: () => ({
-        url: "videos/getAllVideos",
-      }),
-    }),
-    getVideo: builder.query({
-      query: (id) => ({
-        url: `videos/getSingleVideo/${id}`,
+      query: ({ page = 1, limit = 10 }) => ({
+        url: `videos/getAllVideos?page=${page}&limit=${limit}`,
       }),
     }),
     deleteVideo: builder.mutation({
@@ -50,9 +51,10 @@ const videoSlice = api.injectEndpoints({
 export const {
   useUploadVideoMutation,
   useLazySearchVideoQuery,
+  useGetSingleVideoQuery,
+  useLazyGetSingleVideoQuery,
   useGetAllVideosQuery,
   useDeleteVideoMutation,
   useLikeVideoMutation,
   useViewCountMutation,
-  useGetVideoQuery,
 } = videoSlice;

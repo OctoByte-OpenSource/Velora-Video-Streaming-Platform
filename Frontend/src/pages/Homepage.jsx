@@ -4,12 +4,10 @@ import { NavLink } from "react-router-dom";
 const Homepage = () => {
   return (
     // Hero Section
-    <div>
-      <div
-        className="relative bg-gradient-to-r from-cyan-400 to-indigo-600 h-screen"
-        id="home"
-      >
-        <NavBar />
+    <div className="bg-gradient-to-r from-cyan-400 to-indigo-600">
+      <NavBar />
+
+      <div className="relative h-[100vh]" id="home">
         <div
           aria-hidden="true"
           className="absolute inset-0 grid grid-cols-2 -space-x-52 opacity-40 dark:opacity-20"
@@ -48,7 +46,7 @@ const Homepage = () => {
                 </span>
               </a>
             </div>
-            <div className="hidden mt-[10%] sm:flex justify-around">
+            <div className="hidden mt-[12%] sm:flex justify-around">
               <div className="text-left">
                 <h6 className="text-3xl font-semibold text-black dark:text-white">
                   Most stunning

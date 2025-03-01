@@ -2,6 +2,7 @@ import { AppLayout } from "@/AppComponents/Layout/AppLayout";
 import ChatBox from "@/AppComponents/Misc/ChatBox";
 import VideoDetails from "@/AppComponents/Misc/VideoDetails";
 import VideoPlayer from "@/AppComponents/Misc/VideoPlayer";
+import WatchPartyVideoPlayer from "@/AppComponents/Misc/WatchPartyVideoPlayer";
 import Avatar from "@/AppComponents/Utility/Avatar";
 import WatchPartyVideoDetails from "@/AppComponents/Video/WatchPartyVideoDetails";
 import {
@@ -18,6 +19,7 @@ import { useParams } from "react-router-dom";
 
 const WatchPartyPage = () => {
   const user = useSelector((state) => state.auth.user);
+  console.log("usser", user);
   const roomName = useParams().id;
 
   const [roomData, setRoomData] = useState(null);
@@ -31,7 +33,7 @@ const WatchPartyPage = () => {
     setRoomData(data.room);
     setPeopleCount(data.peopleCount);
     setMembers(data.members);
-    setMembers((prev) => [...prev, members]);
+    // setMembers((prev) => [...prev, members]);
   };
 
   const socketEvents = {
@@ -40,15 +42,15 @@ const WatchPartyPage = () => {
   useSocketEventListner(socket, socketEvents);
 
   useEffect(() => {
-    socket.emit(JOIN_ROOM, { roomName });
-  }, []);
+    socket?.emit(JOIN_ROOM, { roomName });
+  }, [socket]);
 
   return (
-    <>
-      <h1 className=" text-center p-1 text-lg font-medium">Watch Party </h1>
-      <div className="flex gap-10 p-5 justify-center ">
-        <div className=" flex-[3]">
-          <VideoPlayer
+    <div className="  ">
+      <h1 className=" text-center  p-1 text-lg font-medium ">Watch Party </h1>
+      <div className="flex  gap-10 px-5  justify-center">
+        <div className=" flex-[3] flex flex-col gap-2">
+          <WatchPartyVideoPlayer
             videoId={roomData?.videoId}
             socket={socket}
             roomName={roomName}
@@ -59,7 +61,7 @@ const WatchPartyPage = () => {
           <ChatBox peopleCount={peopleCount} />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

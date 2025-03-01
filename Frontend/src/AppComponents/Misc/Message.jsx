@@ -1,14 +1,16 @@
 import React from "react";
 import Avatar from "../Utility/Avatar";
 import moment from "moment";
+import { useSelector } from "react-redux";
 
 const Message = ({ message }) => {
+  const userId = useSelector((store) => store.auth.user._id);
   const time = moment(message?.createdAt);
   const formattedTime = time.format("HH:mm A");
   return (
     <div
       className={` flex flex-col  px-4 py-1 w-fit rounded-lg ${
-        message.sender._id === "67a893f259c5cfe5849e1351"
+        message.sender._id === userId
           ? "ml-auto bg-gray-200 text-gray "
           : " bg-green-500 "
       }  break-words`}

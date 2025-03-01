@@ -31,5 +31,5 @@ app.use("/api/v1/watchparty", watchParty);
 app.use(errorMiddleware);
 
 server.listen(process.env.PORT || 5000, () => {
-  console.log("Backend server is running!");
+	console.log(`Backend server is running at ${process.env.PORT}`);
 });

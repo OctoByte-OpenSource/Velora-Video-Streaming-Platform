@@ -7,12 +7,10 @@ import { useParams } from "react-router-dom";
 const SingleVideoPage = () => {
   const videoId = useParams().id;
   return (
-    <div className="flex">
+    <div className="min-h-screen bg-gray-100">
       <div>
         <VideoPlayer videoId={videoId} />
         <VideoDetails />
-      </div>
-      <div className="absolute right-16 mt-5 top-20">
         <Comment />
       </div>
     </div>

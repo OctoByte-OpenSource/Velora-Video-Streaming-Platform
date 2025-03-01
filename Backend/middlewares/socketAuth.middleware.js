@@ -17,7 +17,7 @@ const socketAuth = async (socket, next) => {
 
     const user = await userModel.findById(decoded._id);
     if (!user) return next(new ErrorHandler("You are not authorized", 401));
-
+    console.log("socket user", user);
     socket.user = user;
     next();
   } catch (error) {

@@ -2,6 +2,7 @@ import {
   MESSAGE_ROOM,
   NEW_MESSAGE_ALERT,
   ROOM_JOIN_ALERT,
+  ROOM_LEFT_ALERT,
 } from "@/constants/socketEvent";
 import { useSocketEventListner } from "@/hooks/hook";
 import { getSocket } from "@/socket";
@@ -26,19 +27,29 @@ const ChatBox = ({ peopleCount }) => {
       },
     ]);
   };
+  const roomLeftAlertHandler = ({ name }) => {
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      {
+        content: `${name} has left the Room`,
+        sender: { username: "Admin" },
+      },
+    ]);
+  };
 
   const socketEvents = {
     [ROOM_JOIN_ALERT]: roomJoinAlertHandler,
+    [ROOM_LEFT_ALERT]: roomLeftAlertHandler,
   };
   useSocketEventListner(socket, socketEvents);
   useEffect(() => {
-    socket.on(MESSAGE_ROOM, ({ serverMessage, forRoom }) => {
+    socket?.on(MESSAGE_ROOM, ({ serverMessage, forRoom }) => {
       if (forRoom !== roomName) return;
       console.log(serverMessage);
       setMessages((prevMessages) => [...prevMessages, serverMessage]);
     });
     return () => {
-      socket.off(MESSAGE_ROOM, ({ serverMessage }) => {
+      socket?.off(MESSAGE_ROOM, ({ serverMessage }) => {
         console.log(serverMessage);
         setMessages((prevMessages) => [...prevMessages, serverMessage]);
       });
@@ -53,7 +64,7 @@ const ChatBox = ({ peopleCount }) => {
   };
 
   return (
-    <div className=" h-screen ">
+    <div className="   ">
       <div className="bg-white h-[90vh]  sm:w-[250px] md:w-[350px] mb-10 rounded-lg pt-3 flex flex-col shadow-2xl">
         <p className=" text-center">watch Party chats</p>
         <div className="p-4 flex flex-col h-full">
