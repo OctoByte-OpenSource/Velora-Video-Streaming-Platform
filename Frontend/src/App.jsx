@@ -21,7 +21,6 @@ function App() {
 
   return (
     <div className="w-[100vw] overflow-x-hidden">
-      <Toaster position="top" />
       <Routes>
         <Route path="/" element={<AuthRoute user={user} />}>
           <Route index path="/" element={<DashBoard />} />
