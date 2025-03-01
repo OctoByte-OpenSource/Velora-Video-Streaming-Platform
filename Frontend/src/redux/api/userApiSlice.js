@@ -18,6 +18,12 @@ const userSlice = api.injectEndpoints({
         method: "POST",
       }),
     }),
+    unsubscribeChannel: builder.mutation({
+      query: (id) => ({
+        url: `user/unsubscribeChannel/${id}`,
+        method: "POST",
+      }),
+    }),
     // query for:
     //-update profile
     // - update bio
@@ -31,4 +37,5 @@ export const {
   useGetAllUsersInfoQuery,
   useGetUserInfoQuery,
   useSubscribeChannelMutation,
+  useUnsubscribeChannelMutation,
 } = userSlice;

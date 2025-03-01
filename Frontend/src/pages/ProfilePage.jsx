@@ -8,12 +8,16 @@ import {
 } from "@/redux/api/userApiSlice";
 import { useParams } from "react-router-dom";
 import { useGetAllVideosQuery } from "@/redux/api/videoApiSlice";
+import { SubscribeToTheChannelBtn } from "@/AppComponents/Utility/SubscribeBtn";
+import { useErrors } from "@/hooks/hook";
 
 const ProfilePage = () => {
   const userId = useParams().id;
   const { data, isLoading, isError, error, refetch } =
     useGetUserInfoQuery(userId);
 
+  const errors = [{ isError, error }];
+  useErrors(errors);
   console.log("userId", data);
 
   return (
@@ -23,7 +27,7 @@ const ProfilePage = () => {
       ) : (
         <div className=" w-[90vw] h-full grid py-5 px-10 items-center justify-center">
           <div className="  h-full min-w-[75vw] flex flex-col  gap-3 ">
-            <div className=" bg-blue-800 px-5  rounded-xl text-white ">
+            <div className="  shadow-xl px-5  rounded-xl text-pink-500 ">
               <div className=" flex p-10  items-center sm:gap-5  max-sm:flex-col ">
                 <div className=" w-52">
                   <Avatar
@@ -73,6 +77,7 @@ const ProfilePage = () => {
                     <SubscribeToTheChannelBtn
                       id={data.user._id}
                       refetch={refetch}
+                      subscribers={data.user.subcribers}
                     />
                   </div>
                 </div>
@@ -90,23 +95,3 @@ const ProfilePage = () => {
 const ProfilePageWrapped = AppLayout()(ProfilePage);
 
 export default ProfilePageWrapped;
-
-export const SubscribeToTheChannelBtn = ({ id, refetch }) => {
-  const [subscribeChannelFn] = useSubscribeChannelMutation();
-
-  const subscribeToTheChannel = async () => {
-    await subscribeChannelFn(id);
-    if (refetch) refetch();
-  };
-
-  return (
-    <button
-      className=" px-2 py-1 bg-red-700 rounded-lg"
-      onClick={() => {
-        subscribeToTheChannel();
-      }}
-    >
-      <p>Subscribe</p>
-    </button>
-  );
-};
