@@ -143,6 +143,34 @@ const subscribeChannel = TryCatch(async (req, res, next) => {
     .json({ success: true, message: "Channel subcribed successfully" });
 });
 
+const unsubscribeChannel = TryCatch(async (req, res, next) => {
+  const channelId = req.params.id; //channel Id and userId is same in terms of attributes, here channelId is other usser's Id
+
+  const userId = req.userId;
+  if (channelId === userId) return next(new ErrorHandler("Invalid request"));
+
+  const channel = await userModel.findById(channelId);
+
+  if (!channel) return next(new ErrorHandler("Invalid channel details"));
+
+  const user = await userModel.findById(userId);
+  if (!user) return next(new ErrorHandler("Invalid user details", 403));
+
+  if (!channel.subcribers.includes(userId))
+    return next(new ErrorHandler("Channel already unsubscribed"));
+  if (channel.subcribers.includes(userId)) channel.subcribers.remove(userId);
+  if (user.subscribedChannel.includes(userId)) {
+    user.subscribedChannel.remove(channelId);
+  }
+
+  await channel.save();
+  await user.save();
+
+  return res
+    .status(200)
+    .json({ success: true, message: "Channel unsubcribed" });
+});
+
 const updateBio = TryCatch(async (req, res, next) => {
   const { bio } = req.body;
   const userId = req.userId;
@@ -191,4 +219,5 @@ module.exports = {
   getAllUsers,
   subscribeChannel,
   updateBio,
+  unsubscribeChannel,
 };

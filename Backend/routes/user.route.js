@@ -7,6 +7,7 @@ const {
   getUserInfo,
   subscribeChannel,
   updateBio,
+  unsubscribeChannel,
 } = require("../controllers/user.controller");
 const auth = require("../middlewares/auth.middleware");
 
@@ -24,6 +25,7 @@ user.use(auth);
 user.get("/getAllUsers", getAllUsers);
 user.get("/info/:id", getUserInfo);
 user.post("/subscribeChannel/:id", subscribeChannel);
+user.post("/unsubscribeChannel/:id", unsubscribeChannel);
 user.post("/update/profilePhoto");
 user.post("/update/bio", updateBio);
 

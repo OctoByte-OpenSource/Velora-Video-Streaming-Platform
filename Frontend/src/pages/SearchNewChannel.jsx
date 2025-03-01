@@ -13,9 +13,7 @@ import { useSelector } from "react-redux";
 const SearchChannel = () => {
   const [searchValue, setSearchValue] = useState("");
 
-  //   const {subscribers} = useSelector((state) => state.auth.user);
-
-  const { data, isLoading, isError, error } =
+  const { data, isLoading, isError, error, refetch } =
     useGetAllUsersInfoQuery(searchValue);
 
   return (
@@ -48,7 +46,7 @@ const SearchChannel = () => {
               <p className=" text-center p-4">Top Channels</p>
               <div className=" grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {data.users.map((channel, i) => (
-                  <ChannelCard key={i} channel={channel} />
+                  <ChannelCard key={i} channel={channel} refetch={refetch} />
                 ))}
               </div>
             </div>
