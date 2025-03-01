@@ -28,6 +28,7 @@ export default userSlice;
 
 export const {
   useLazyGetAllUsersInfoQuery,
+  useGetAllUsersInfoQuery,
   useGetUserInfoQuery,
   useSubscribeChannelMutation,
 } = userSlice;

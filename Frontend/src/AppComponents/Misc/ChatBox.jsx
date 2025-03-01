@@ -1,50 +1,82 @@
-import { useState, useEffect } from 'react';
-import io from 'socket.io-client';
+import {
+  MESSAGE_ROOM,
+  NEW_MESSAGE_ALERT,
+  ROOM_JOIN_ALERT,
+  ROOM_LEFT_ALERT,
+} from "@/constants/socketEvent";
+import { useSocketEventListner } from "@/hooks/hook";
+import { getSocket } from "@/socket";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import Message from "./Message";
 
-const socket = io(''); 
+const ChatBox = ({ peopleCount }) => {
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
 
-const ChatBox = () => {
+  const roomName = useParams().id;
 
-    const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
+  const socket = getSocket();
 
+  const roomJoinAlertHandler = ({ name }) => {
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      {
+        content: `${name} has joined the Room`,
+        sender: { username: "Admin" },
+      },
+    ]);
+  };
+  const roomLeftAlertHandler = ({ name }) => {
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      {
+        content: `${name} has left the Room`,
+        sender: { username: "Admin" },
+      },
+    ]);
+  };
+
+  const socketEvents = {
+    [ROOM_JOIN_ALERT]: roomJoinAlertHandler,
+    [ROOM_LEFT_ALERT]: roomLeftAlertHandler,
+  };
+  useSocketEventListner(socket, socketEvents);
   useEffect(() => {
-    socket.on('message', (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
+    socket?.on(MESSAGE_ROOM, ({ serverMessage, forRoom }) => {
+      if (forRoom !== roomName) return;
+      console.log(serverMessage);
+      setMessages((prevMessages) => [...prevMessages, serverMessage]);
     });
+    return () => {
+      socket?.off(MESSAGE_ROOM, ({ serverMessage }) => {
+        console.log(serverMessage);
+        setMessages((prevMessages) => [...prevMessages, serverMessage]);
+      });
+    };
   }, []);
 
   const sendMessage = () => {
     if (newMessage.trim()) {
-      socket.emit('send-message', newMessage);
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: newMessage, sender: 'You' },
-      ]);
-      setNewMessage('');
+      socket.emit(MESSAGE_ROOM, { roomName, message: newMessage });
+      setNewMessage("");
     }
   };
 
   return (
-    <div className="flex justify-center items-start min-h-screen">
-      <div className="bg-white h-[700px] w-[600px] rounded-lg pt-3 flex flex-col shadow-2xl">
+    <div className="   ">
+      <div className="bg-white h-[90vh]  sm:w-[250px] md:w-[350px] mb-10 rounded-lg pt-3 flex flex-col shadow-2xl">
+        <p className=" text-center">watch Party chats</p>
         <div className="p-4 flex flex-col h-full">
           {/* Messages Section */}
-          <div className="flex-1 overflow-y-auto p-2 space-y-2">
+          <div className="flex-1 max-h-[75vh] overflow-y-auto p-2 space-y-2">
             {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`p-3 rounded-lg ${
-                  msg.sender === 'You' ? 'bg-black text-white ml-auto' : 'bg-gray-200 text-gray'
-                } break-words`}
-              >
-                {msg.text}
-              </div>
+              <Message key={index} message={msg} />
             ))}
           </div>
 
           {/* Input Section */}
-          <div className="mt-4 flex items-center">
+          <div className=" p-2 flex items-center">
             <input
               type="text"
               value={newMessage}
@@ -54,7 +86,7 @@ const ChatBox = () => {
             />
             <button
               onClick={sendMessage}
-              className="bg-black text-white p-2 rounded-r-md hover:bg-red focus:outline-none ml-2"
+              className="bg-blue-600 text-white p-2 rounded-r-md hover:bg-red focus:outline-none ml-2"
             >
               Send
             </button>
@@ -62,7 +94,7 @@ const ChatBox = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ChatBox
+export default ChatBox;
